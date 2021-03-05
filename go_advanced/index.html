@@ -1,0 +1,306 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Go 进阶 - duya10 的博客</title><meta name=Description content="基于 Hugo 的博客"><meta property="og:title" content="Go 进阶"><meta property="og:description" content="陷阱 引用和指针 silce, map, channel 是引用，内部数据结构包含了底层数据结构的指针，所以作为函数参数在函数中改变其中的值能够生效。 其余数据类型在作为函数参数时"><meta property="og:type" content="article"><meta property="og:url" content="http://example.org/go_advanced/"><meta property="og:image" content="http://example.org/logo.png"><meta property="article:published_time" content="2019-03-22T14:28:52+08:00"><meta property="article:modified_time" content="2019-03-22T14:28:52+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://example.org/logo.png"><meta name=twitter:title content="Go 进阶"><meta name=twitter:description content="陷阱 引用和指针 silce, map, channel 是引用，内部数据结构包含了底层数据结构的指针，所以作为函数参数在函数中改变其中的值能够生效。 其余数据类型在作为函数参数时"><meta name=application-name content="LoveIt"><meta name=apple-mobile-web-app-title content="LoveIt"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://example.org/go_advanced/><link rel=prev href=http://example.org/object_oriented/><link rel=next href=http://example.org/gomod_goproxy/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Go 进阶","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/example.org\/go_advanced\/"},"genre":"posts","keywords":"Go","wordcount":1695,"url":"http:\/\/example.org\/go_advanced\/","datePublished":"2019-03-22T14:28:52+08:00","dateModified":"2019-03-22T14:28:52+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"duya10"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':('auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark'))&&document.body.setAttribute('theme','dark');</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="duya10 的博客"><span class=header-title-pre><i class="fas fa-pencil-alt"></i></span>duya10's blog</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/about/>关于 </a><a class=menu-item href=https://github.com/duya10 title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="duya10 的博客"><span class=header-title-pre><i class="fas fa-pencil-alt"></i></span>duya10's blog</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/>文章</a><a class=menu-item href=/tags/>标签</a><a class=menu-item href=/categories/>分类</a><a class=menu-item href=/about/>关于</a><a class=menu-item href=https://github.com/duya10 title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Go 进阶</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/duya10 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>duya10</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/go/><i class="far fa-folder fa-fw"></i>Go</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-03-22>2019-03-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1695 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#陷阱>陷阱</a><ul><li><a href=#引用和指针>引用和指针</a></li><li><a href=#跳出-for-switch-和-fo-select-代码块>跳出 for-switch 和 fo-select 代码块</a></li><li><a href=#defer-函数的参数值>defer 函数的参数值</a></li><li><a href=#类型声明与方法>类型声明与方法</a></li><li><a href=#堆栈变量>堆栈变量</a></li></ul></li><li><a href=#并发和锁>并发和锁</a><ul><li><a href=#nil-channel>nil channel</a></li><li><a href=#实现同步>实现同步</a></li><li><a href=#fanin>FanIn</a></li></ul></li><li><a href=#断行规则>断行规则</a></li><li><a href=#参考链接>参考链接</a></li></ul></nav></div></div><div class=content id=content><h2 id=陷阱>陷阱</h2><h3 id=引用和指针>引用和指针</h3><p>silce, map, channel 是引用，内部数据结构包含了底层数据结构的指针，所以作为函数参数在函数中改变其中的值能够生效。</p><p>其余数据类型在作为函数参数时，由于函数传参是值拷贝，所以如果需要在函数中改变值，就需要传指针。</p><h3 id=跳出-for-switch-和-fo-select-代码块>跳出 for-switch 和 fo-select 代码块</h3><p>没有指定标签的 break 只会跳出 switch/select 语句，若不能使用 return 语句跳出，可以为 break 跳出标签指定的代码块。</p><p><em>goto</em> 虽然也能跳转到指定位置，但是会再次进入 for-switch，形成死循环。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+<span class=nx>loop</span><span class=p>:</span>
+    <span class=k>for</span> <span class=p>{</span>
+        <span class=k>switch</span> <span class=p>{</span>
+        <span class=k>case</span> <span class=kc>true</span><span class=p>:</span>
+            <span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;break&#34;</span><span class=p>)</span>
+            <span class=k>break</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;done&#34;</span><span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=defer-函数的参数值>defer 函数的参数值</h3><p>对 defer 延迟执行的函数，它的参数会在声明时候就执行表达式，而不是执行函数的时候才执行。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=kd>var</span> <span class=nx>i</span> <span class=p>=</span> <span class=mi>1</span>
+    <span class=k>defer</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=s>&#34;result: &#34;</span><span class=p>,</span> <span class=kd>func</span><span class=p>()</span> <span class=kt>int</span> <span class=p>{</span><span class=k>return</span> <span class=nx>i</span> <span class=o>*</span> <span class=mi>2</span><span class=p>}())</span>
+    <span class=nx>i</span><span class=o>++</span>
+<span class=p>}</span>
+<span class=err>#</span> <span class=nx>result</span><span class=p>:</span> <span class=mi>2</span>
+</code></pre></td></tr></table></div></div><h3 id=类型声明与方法>类型声明与方法</h3><p>从一个现有的非 interface 类型创建新类型，不会继承原有的方法；<br>将原类型以匿名字段的形式嵌到自定义的新的 struct 中，可以使用原类型的方法；<br>使用 interface 类型创建新类型，保留了原类型的方法集。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>Locker1</span> <span class=nx>sync</span><span class=p>.</span><span class=nx>Mutex</span>
+
+<span class=kd>type</span> <span class=nx>Locker2</span> <span class=kd>struct</span> <span class=p>{</span>
+    <span class=nx>sync</span><span class=p>.</span><span class=nx>Mutex</span>
+<span class=p>}</span>
+
+<span class=kd>type</span> <span class=nx>Locker3</span> <span class=nx>sync</span><span class=p>.</span><span class=nx>Locker</span>
+
+<span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=kd>var</span> <span class=nx>locker</span> <span class=nx>Locker1</span>
+    <span class=nx>locker</span><span class=p>.</span><span class=nf>Lock</span><span class=p>()</span> <span class=c1>// 报错
+</span><span class=c1></span>    <span class=nx>locker</span><span class=p>.</span><span class=nf>Unlock</span><span class=p>()</span> <span class=c1>// 报错
+</span><span class=c1></span>
+    <span class=kd>var</span> <span class=nx>locker</span> <span class=nx>Locker2</span>
+    <span class=nx>locker</span><span class=p>.</span><span class=nf>Lock</span><span class=p>()</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=nx>locker</span><span class=p>.</span><span class=nf>Unlock</span><span class=p>()</span> <span class=c1>// OK
+</span><span class=c1></span>
+    <span class=kd>var</span> <span class=nx>locker</span> <span class=nx>Locker3</span>
+    <span class=nx>locker</span><span class=p>.</span><span class=nf>Lock</span><span class=p>()</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=nx>locker</span><span class=p>.</span><span class=nf>Unlock</span><span class=p>()</span> <span class=c1>// OK
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=堆栈变量>堆栈变量</h3><p>Go 编译器会根据变量的大小和 &ldquo;escape analysis&rdquo; 的结果来决定变量的存储位置，所以可以准确返回本地变量的地址。</p><p>在 go build 或 go run 时，加入 -m，能准确分析程序的变量分配的栈堆位置：</p><blockquote><p>go run -gcflags -m main.go</p></blockquote><h2 id=并发和锁>并发和锁</h2><h3 id=nil-channel>nil channel</h3><p>在一个值为 nil 的 channel 上发送和接收数据将永久阻塞，利用这个死锁的特性，可以用在 select 中动态地选择发送或接收的 channel。</p><h3 id=实现同步>实现同步</h3><p>题目描述: 编写一个程序，开启 3 个线程 A,B,C，这三个线程的输出分别为 A、B、C，每个线程将自己的 输出在屏幕上打印 10 遍，要求输出的结果必须按顺序显示。如：ABCABCABC&mldr;.</p><p>关键点：</p><ol><li>开 3 个线程</li><li>每个线程将自己的输出打印</li><li>每个线程都打印 10 遍</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=nx>ch1</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kt>string</span><span class=p>)</span>
+    <span class=nx>ch2</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kt>string</span><span class=p>)</span>
+    <span class=nx>ch3</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kt>string</span><span class=p>)</span>
+    <span class=nx>done</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kd>struct</span><span class=p>{})</span>
+
+    <span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>for</span> <span class=p>{</span>
+            <span class=nb>print</span><span class=p>(</span><span class=o>&lt;-</span><span class=nx>ch1</span><span class=p>)</span>
+            <span class=nx>ch2</span> <span class=o>&lt;-</span> <span class=s>&#34;B&#34;</span>
+        <span class=p>}</span>
+    <span class=p>}()</span>
+
+    <span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>for</span> <span class=p>{</span>
+            <span class=nb>print</span><span class=p>(</span><span class=o>&lt;-</span><span class=nx>ch2</span><span class=p>)</span>
+            <span class=nx>ch3</span> <span class=o>&lt;-</span> <span class=s>&#34;C&#34;</span>
+        <span class=p>}</span>
+    <span class=p>}()</span>
+
+    <span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+        <span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>1</span><span class=p>;</span> <span class=nx>i</span> <span class=o>&lt;=</span> <span class=mi>10</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+            <span class=nb>print</span><span class=p>(</span><span class=o>&lt;-</span><span class=nx>ch3</span><span class=p>)</span>
+            <span class=nx>ch1</span> <span class=o>&lt;-</span> <span class=s>&#34;A&#34;</span>
+        <span class=p>}</span>
+        <span class=nx>done</span> <span class=o>&lt;-</span> <span class=kd>struct</span><span class=p>{}{}</span>
+    <span class=p>}()</span>
+
+    <span class=nx>ch1</span> <span class=o>&lt;-</span> <span class=s>&#34;A&#34;</span>
+
+    <span class=o>&lt;-</span><span class=nx>done</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>进一步思考：</p><p>编写一个程序，开启 N 个线程 A,B,C&mldr;，这 N 个线程的输出分别为 A、B、C&mldr;，每个线程将自己的输出在屏幕上打印 M 遍，要求输出的结果必须按顺序显示。如：ABC&mldr;ABC&mldr;ABC&mldr;
+其中 N &lt;= 1000, M &lt;= 1000</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>var</span> <span class=p>(</span>
+    <span class=nx>N</span> <span class=p>=</span> <span class=mi>3</span>
+    <span class=nx>M</span> <span class=p>=</span> <span class=mi>10</span>
+<span class=p>)</span>
+
+<span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=c1>// wait 表示等待信号的管道，signal 表示发送信号的管道
+</span><span class=c1></span>    <span class=kd>var</span> <span class=nx>wait</span><span class=p>,</span> <span class=nx>signal</span><span class=p>,</span> <span class=nx>firstWait</span><span class=p>,</span> <span class=nx>lastSignal</span> <span class=kd>chan</span> <span class=kd>struct</span><span class=p>{}</span>
+
+    <span class=nx>wait</span> <span class=p>=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kd>struct</span><span class=p>{})</span>
+    <span class=nx>firstWait</span> <span class=p>=</span> <span class=nx>wait</span> <span class=c1>// 从主 goroutine 发送到第一个
+</span><span class=c1></span>
+    <span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>N</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+        <span class=nx>signal</span> <span class=p>=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kd>struct</span><span class=p>{})</span>
+        <span class=k>go</span> <span class=nf>echo</span><span class=p>(</span><span class=nx>i</span><span class=p>,</span> <span class=nx>wait</span><span class=p>,</span> <span class=nx>signal</span><span class=p>)</span>
+        <span class=nx>wait</span> <span class=p>=</span> <span class=nx>signal</span> <span class=c1>// 通过这个连接两个 goroutine
+</span><span class=c1></span>    <span class=p>}</span>
+
+    <span class=nx>lastSignal</span> <span class=p>=</span> <span class=nx>signal</span> <span class=c1>// 最后一个把信号发回主 goroutine
+</span><span class=c1></span>
+    <span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>M</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+        <span class=nx>firstWait</span> <span class=o>&lt;-</span> <span class=kd>struct</span><span class=p>{}{}</span>
+        <span class=o>&lt;-</span><span class=nx>lastSignal</span>
+    <span class=p>}</span>
+
+    <span class=nb>close</span><span class=p>(</span><span class=nx>firstWait</span><span class=p>)</span> <span class=c1>// 关闭管道，不再接收数据
+</span><span class=c1></span><span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>echo</span><span class=p>(</span><span class=nx>num</span> <span class=kt>int</span><span class=p>,</span> <span class=nx>wait</span> <span class=kd>chan</span> <span class=kd>struct</span><span class=p>{},</span> <span class=nx>signal</span> <span class=kd>chan</span> <span class=kd>struct</span><span class=p>{})</span> <span class=p>{</span>
+    <span class=nx>letter</span> <span class=o>:=</span> <span class=nb>string</span><span class=p>(</span><span class=sc>&#39;A&#39;</span> <span class=o>+</span> <span class=nx>num</span><span class=p>)</span>
+
+    <span class=k>for</span> <span class=nx>_</span> <span class=p>=</span> <span class=k>range</span> <span class=nx>wait</span> <span class=p>{</span>
+        <span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>letter</span><span class=p>)</span>
+        <span class=nx>signal</span> <span class=o>&lt;-</span> <span class=kd>struct</span><span class=p>{}{}</span>
+    <span class=p>}</span>
+
+    <span class=nb>close</span><span class=p>(</span><span class=nx>signal</span><span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=fanin>FanIn</h3><p>通过将多个输入 channel 多路复用到单个处理 channel 的方式，一个函数能够从多个输入 channel 中读取数据并处理。当所有的输出 channel 都关闭的时候，单个处理 channel 也会关闭。这就叫做扇入。</p><p>这里主要将 N 个 channel 的输出输入到一个 channel 中。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>var</span> <span class=p>(</span>
+    <span class=nx>N</span> <span class=p>=</span> <span class=mi>3</span>
+    <span class=nx>M</span> <span class=p>=</span> <span class=mi>10</span>
+<span class=p>)</span>
+
+<span class=kd>func</span> <span class=nf>gen</span><span class=p>(</span><span class=nx>v</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>times</span> <span class=kt>int</span><span class=p>)</span> <span class=o>&lt;-</span><span class=kd>chan</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=nx>ch</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kt>string</span><span class=p>)</span>
+	<span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+		<span class=k>defer</span> <span class=nb>close</span><span class=p>(</span><span class=nx>ch</span><span class=p>)</span>
+		<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>times</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+			<span class=nx>ch</span> <span class=o>&lt;-</span> <span class=nx>v</span>
+		<span class=p>}</span>
+	<span class=p>}()</span>
+	<span class=k>return</span> <span class=nx>ch</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>fanIn</span><span class=p>(</span><span class=nx>times</span> <span class=kt>int</span><span class=p>,</span> <span class=nx>inputs</span> <span class=p>[]</span><span class=o>&lt;-</span><span class=kd>chan</span> <span class=kt>string</span><span class=p>)</span> <span class=o>&lt;-</span><span class=kd>chan</span> <span class=kt>string</span> <span class=p>{</span>
+	<span class=nx>ch</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kt>string</span><span class=p>)</span>
+	<span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+		<span class=k>defer</span> <span class=nb>close</span><span class=p>(</span><span class=nx>ch</span><span class=p>)</span>
+		<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>times</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+			<span class=k>for</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>input</span> <span class=o>:=</span> <span class=k>range</span> <span class=nx>inputs</span> <span class=p>{</span>
+				<span class=nx>v</span> <span class=o>:=</span> <span class=o>&lt;-</span><span class=nx>input</span>
+				<span class=nx>ch</span> <span class=o>&lt;-</span> <span class=nx>v</span>
+			<span class=p>}</span>
+		<span class=p>}</span>
+	<span class=p>}()</span>
+	<span class=k>return</span> <span class=nx>ch</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+	<span class=nx>times</span> <span class=o>:=</span> <span class=nx>M</span>
+	<span class=nx>inputs</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=o>&lt;-</span><span class=kd>chan</span> <span class=kt>string</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=nx>N</span><span class=p>)</span>
+	<span class=k>for</span> <span class=nx>i</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>i</span> <span class=p>&lt;</span> <span class=nx>N</span><span class=p>;</span> <span class=nx>i</span><span class=o>++</span> <span class=p>{</span>
+		<span class=nx>threadName</span> <span class=o>:=</span> <span class=nb>string</span><span class=p>(</span><span class=sc>&#39;A&#39;</span> <span class=o>+</span> <span class=nx>i</span><span class=p>)</span>
+		<span class=nx>inputs</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>inputs</span><span class=p>,</span> <span class=nf>gen</span><span class=p>(</span><span class=nx>threadName</span><span class=p>,</span> <span class=nx>times</span><span class=p>))</span>
+	<span class=p>}</span>
+	<span class=k>for</span> <span class=nx>char</span> <span class=o>:=</span> <span class=k>range</span> <span class=nf>fanIn</span><span class=p>(</span><span class=nx>times</span><span class=p>,</span> <span class=nx>inputs</span><span class=p>)</span> <span class=p>{</span>
+		<span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>char</span><span class=p>)</span>
+	<span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h2 id=断行规则>断行规则</h2><ol><li>在 Go 中，注释除外，如果一个代码行的最后一个语法词段（token）为下列所示之一，则分号将自动插入到行尾：<ul><li>一个标识符</li><li>一个整数、浮点数、虚部、码点或者字符串字面表示形式</li><li>跳转关键字之一：break、continue、fallthrough 和 return</li><li>自增运算符 ++ 或者自减运算符 &ndash;</li><li>右括号：)、] 或者 }</li></ul></li><li>为了一条复杂语句完全显示在一个代码行中，分号可能被插入在 &lsquo;)&rsquo; 或者 &lsquo;}&rsquo; 之前</li></ol><h2 id=参考链接>参考链接</h2><ul><li><a href=https://golang.google.cn/ target=_blank rel="noopener noreffer">Go 手册</a></li><li><a href=https://go-zh.org/ target=_blank rel="noopener noreffer">Go 手册(中文)</a></li><li><a href=https://github.com/Go-zh target=_blank rel="noopener noreffer">Go 语言中文社区</a></li><li><a href=https://tour.go-zh.org/list target=_blank rel="noopener noreffer">Go 指南</a></li><li><a href=https://go-zh.org/doc/effective_go.html target=_blank rel="noopener noreffer">实效 Go 编程</a></li><li><a href=https://gowalker.org/ target=_blank rel="noopener noreffer">Go walker</a></li><li><a href=https://github.com/developer-learning/reading-go target=_blank rel="noopener noreffer">Go 夜读</a></li><li><a href=https://reading.developerlearning.cn/ target=_blank rel="noopener noreffer">Go 夜读</a></li><li><a href=https://blog.go-zh.org/gos-declaration-syntax target=_blank rel="noopener noreffer">Go&rsquo;s Declaration Syntax, 为什么类型在变量后面</a></li><li><a href=https://blog.go-zh.org/defer-panic-and-recover target=_blank rel="noopener noreffer">Defer, Panic, and Recover</a></li><li><a href=https://blog.go-zh.org/go-slices-usage-and-internals# target=_blank rel="noopener noreffer">Go 切片：用法和本质</a></li><li><a href=https://studygolang.com/articles/12907 target=_blank rel="noopener noreffer">Go 优缺点</a></li><li><a href=https://tonybai.com/2017/04/20/go-coding-in-go-way/ target=_blank rel="noopener noreffer">Go coding in go way</a></li><li><a href=https://bluxte.net/musings/2018/04/10/go-good-bad-ugly/ target=_blank rel="noopener noreffer">Go: the Good, the Bad and the Ugly</a></li><li><a href=https://segmentfault.com/a/1190000017182416 target=_blank rel="noopener noreffer">Golang FAN 模式</a></li><li><a href=https://12factor.net/zh_cn/ target=_blank rel="noopener noreffer">项目部署</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2019-03-22</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/go_advanced/index.md target=_blank>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=http://example.org/go_advanced/ data-title="Go 进阶" data-hashtags=Go><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="分享到 Facebook" data-sharer=facebook data-url=http://example.org/go_advanced/ data-hashtag=Go><i class="fab fa-facebook-square fa-fw"></i></a><a href=javascript:void(0); title="分享到 Instapaper" data-sharer=instapaper data-url=http://example.org/go_advanced/ data-title="Go 进阶" data-description><i data-svg-src=/lib/simple-icons/icons/instapaper.min.svg></i></a><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=http://example.org/go_advanced/ data-title="Go 进阶"><i class="fab fa-weibo fa-fw"></i></a><a href=javascript:void(0); title="分享到 Evernote" data-sharer=evernote data-url=http://example.org/go_advanced/ data-title="Go 进阶"><i class="fab fa-evernote fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/go/>Go</a></section><section><span><a href=javascript:void(0); onclick=window.history.back();>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/object_oriented/ class=prev rel=prev title=面向对象理解><i class="fas fa-angle-left fa-fw"></i>面向对象理解</a>
+<a href=/gomod_goproxy/ class=next rel=next title="Go mod 和 goproxy">Go mod 和 goproxy<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.79.1">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/duya10 target=_blank>duya10</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":20},"comment":{},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

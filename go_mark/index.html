@@ -1,0 +1,283 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Go 笔记 - duya10 的博客</title><meta name=Description content="基于 Hugo 的博客"><meta property="og:title" content="Go 笔记"><meta property="og:description" content="包 约定包名与导入路径的最后一个元素相同 math/rand 的包名为 rand 函数 函数参数不是指针的话，即为值传递。 多个函数的已命名形参类型相同时，除最后一个类型外，其"><meta property="og:type" content="article"><meta property="og:url" content="http://example.org/go_mark/"><meta property="og:image" content="http://example.org/logo.png"><meta property="article:published_time" content="2019-01-14T14:28:08+08:00"><meta property="article:modified_time" content="2019-01-14T14:28:08+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="http://example.org/logo.png"><meta name=twitter:title content="Go 笔记"><meta name=twitter:description content="包 约定包名与导入路径的最后一个元素相同 math/rand 的包名为 rand 函数 函数参数不是指针的话，即为值传递。 多个函数的已命名形参类型相同时，除最后一个类型外，其"><meta name=application-name content="LoveIt"><meta name=apple-mobile-web-app-title content="LoveIt"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=http://example.org/go_mark/><link rel=prev href=http://example.org/go_vscode/><link rel=next href=http://example.org/programming_notes/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Go 笔记","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"http:\/\/example.org\/go_mark\/"},"genre":"posts","keywords":"Go","wordcount":3364,"url":"http:\/\/example.org\/go_mark\/","datePublished":"2019-01-14T14:28:08+08:00","dateModified":"2019-01-14T14:28:08+08:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"duya10"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':('auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark'))&&document.body.setAttribute('theme','dark');</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="duya10 的博客"><span class=header-title-pre><i class="fas fa-pencil-alt"></i></span>duya10's blog</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/about/>关于 </a><a class=menu-item href=https://github.com/duya10 title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw"></i></a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop><input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span></span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="duya10 的博客"><span class=header-title-pre><i class="fas fa-pencil-alt"></i></span>duya10's blog</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a><span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/>文章</a><a class=menu-item href=/tags/>标签</a><a class=menu-item href=/categories/>分类</a><a class=menu-item href=/about/>关于</a><a class=menu-item href=https://github.com/duya10 title=GitHub rel="noopener noreffer" target=_blank><i class="fab fa-github fa-fw"></i></a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Go 笔记</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/duya10 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>duya10</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/go/><i class="far fa-folder fa-fw"></i>Go</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-01-14>2019-01-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3364 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#包>包</a></li><li><a href=#函数>函数</a><ul><li><a href=#函数的闭包>函数的闭包</a></li></ul></li><li><a href=#变量>变量</a><ul><li><a href=#短变量声明>短变量声明</a></li></ul></li><li><a href=#基本类型>基本类型</a></li><li><a href=#零值>零值</a></li><li><a href=#常量>常量</a></li><li><a href=#defer>defer</a></li><li><a href=#指针>指针</a></li><li><a href=#结构体>结构体</a></li><li><a href=#数组>数组</a></li><li><a href=#切片-slice>切片 slice</a><ul><li><a href=#零值-1>零值</a></li><li><a href=#长度和容量>长度和容量</a></li><li><a href=#用-make-创建切片>用 make 创建切片</a></li><li><a href=#向切片追加元素>向切片追加元素</a></li><li><a href=#映射-map>映射 map</a></li><li><a href=#修改映射>修改映射</a></li></ul></li><li><a href=#方法>方法</a><ul><li><a href=#方法与指针重定向>方法与指针重定向</a></li><li><a href=#选择值或指针作为接收者>选择值或指针作为接收者</a></li></ul></li><li><a href=#接口>接口</a><ul><li><a href=#接口值>接口值</a></li><li><a href=#底层值为-nil-的接口值和-nil-接口值>底层值为 nil 的接口值和 nil 接口值</a></li><li><a href=#空接口>空接口</a></li><li><a href=#类型断言>类型断言</a></li><li><a href=#类型选择>类型选择</a></li></ul></li><li><a href=#并发>并发</a></li></ul></nav></div></div><div class=content id=content><h2 id=包>包</h2><p>约定包名与导入路径的最后一个元素相同</p><blockquote><p>math/rand 的包名为 rand</p></blockquote><h2 id=函数>函数</h2><p>函数参数不是指针的话，即为值传递。</p><p>多个函数的已命名形参类型相同时，除最后一个类型外，其他的都可以省略</p><blockquote><p>x int, y int<br>x, y int</p></blockquote><h3 id=函数的闭包>函数的闭包</h3><p>Go 函数可以是一个闭包。闭包是一个函数值，它引用了其函数体之外的变量。该函数可以访问并赋予其引用的变量的值，换句话说，该函数被“绑定”在了这些变量上。闭包保证了函数内引用变量的生命周期和函数的活动时间相同。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nf>adder</span><span class=p>()</span> <span class=kd>func</span><span class=p>(</span><span class=kt>int</span><span class=p>)</span> <span class=kt>int</span> <span class=p>{</span>  
+    <span class=nx>sum</span> <span class=o>:=</span> <span class=mi>0</span> <span class=o>--</span> <span class=nx>函数外部的变量</span>  
+    <span class=k>return</span> <span class=kd>func</span><span class=p>(</span><span class=nx>x</span> <span class=kt>int</span><span class=p>)</span> <span class=kt>int</span> <span class=p>{</span> <span class=o>--</span> <span class=nx>闭包</span>  
+        <span class=nx>sum</span> <span class=o>+=</span> <span class=nx>x</span>  
+        <span class=k>return</span> <span class=nx>sum</span>  
+    <span class=p>}</span>  
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h2 id=变量>变量</h2><h3 id=短变量声明>短变量声明</h3><p>在函数中，简洁赋值语句 := 可在类型明确的地方代替 var 声明。</p><p>函数外的每个语句都必须以关键字开始（var, const, func 等等），因此 := 结构不能在函数外使用。</p><h2 id=基本类型>基本类型</h2><ul><li>bool</li><li>string</li><li>int int8 int16 int32 int64</li><li>uint uint8 uint16 uint32 uint64</li><li>byte // uint8 的别名</li><li>rune // int32 的别名，表示一个 Unicode 码点</li><li>float32 float64</li><li>complex64 complex128 // 复数类型：20+5i</li></ul><blockquote><p>int, uint 和 uintptr 在 32 位系统上通常为 32 位宽，在 64 位系统上则为 64 位宽。 当你需要一个整数值时应使用 int 类型，除非你有特殊的理由使用固定大小或无符号的整数类型。</p></blockquote><h2 id=零值>零值</h2><p>没有明确初始值的变量声明会被赋予它们的 <strong>零值</strong>。</p><ul><li>数值类型零值为 0</li><li>布尔类型零值为 false</li><li>字符串的零值为 &ldquo;"(空字符串)</li></ul><h2 id=常量>常量</h2><blockquote><p>const Pi = 3.141592653589793</p></blockquote><p>常量的声明与变量类似，只不过是使用 const 关键字。</p><p>常量可以是字符、字符串、布尔值或数值。</p><p>常量不能用 := 语法声明。</p><h2 id=defer>defer</h2><p>defer 语句会将函数推迟到外层函数返回之后执行。</p><p>推迟调用的函数其参数会立即求值，但直到外层函数返回前该函数都不会被调用。</p><p>推迟的函数调用会被压入一个栈中。当外层函数返回时，被推迟的函数会按照后进先出的顺序调用。</p><h2 id=指针>指针</h2><p>类型 *T 是指向 T 类型值的指针。其零值为 nil。</p><blockquote><p>var p *int</p></blockquote><p>& 操作符会生成一个指向其操作数的指针。</p><blockquote><p>i := 42<br>p = &i</p></blockquote><p>* 操作符表示指针指向的底层值。</p><blockquote><p>fmt.Println(*p) // 通过指针 p 读取 i<br>*p = 21 // 通过指针 p 设置 i</p></blockquote><h2 id=结构体>结构体</h2><p>一个结构体（struct）就是一个字段的集合。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>Vertex</span> <span class=kd>struct</span> <span class=p>{</span>  
+    <span class=nx>X</span> <span class=kt>int</span>  
+    <span class=nx>Y</span> <span class=kt>int</span>  
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h2 id=数组>数组</h2><p>类型 [n]T 表示拥有 n 个 T 类型的值的数组。数组的长度是其类型的一部分，因此数组不能改变大小。</p><blockquote><p>var a [10]int</p></blockquote><h2 id=切片-slice>切片 slice</h2><p>类型 []T 表示一个元素类型为 T 的切片。</p><p>切片通过两个下标来界定，即一个上界和一个下界，二者以冒号分隔：<br>上标和下标均可省略，上标缺省值为 0，下标缺省值为 a 的长度</p><blockquote><p>a[low : high]</p></blockquote><p>它会选择一个半开区间，包括第一个元素，但排除最后一个元素。</p><p>切片并不存储任何数据，它只是描述了底层数组中的一段。</p><p>更改切片的元素会修改其底层数组中对应的元素。</p><p>与它共享底层数组的切片都会观测到这些修改。</p><h3 id=零值-1>零值</h3><p>切片的零值是 nil。</p><p>nil 切片的长度和容量为 0 且没有底层数组。</p><h3 id=长度和容量>长度和容量</h3><p>切片的长度就是它所包含的元素个数。</p><p>切片的容量是从它的第一个元素开始数，到其底层数组元素末尾的个数。</p><p>切片 s 的长度和容量可通过表达式 len(s) 和 cap(s) 来获取。</p><h3 id=用-make-创建切片>用 make 创建切片</h3><p>切片可以用内建函数 make 来创建，这也是你创建动态数组的方式。</p><p>make 函数会分配一个元素为零值的数组并返回一个引用了它的切片：</p><blockquote><p>a := make([]int, 5) // len(a)=5</p></blockquote><p>要指定它的容量，需向 make 传入第三个参数：</p><blockquote><p>b := make([]int, 0, 5) // len(b)=0, cap(b)=5</p></blockquote><h3 id=向切片追加元素>向切片追加元素</h3><blockquote><p>func append(s []T, vs &mldr;T) []T</p></blockquote><p>append 的第一个参数 s 是一个元素类型为 T 的切片，其余类型为 T 的值将会追加到该切片的末尾。</p><p>append 的结果是一个包含原切片所有元素加上新添加元素的切片。</p><p>当 s 的底层数组太小，不足以容纳所有给定的值时，它就会分配一个更大的数组。返回的切片会指向这个新分配的数组。</p><h3 id=映射-map>映射 map</h3><p>映射将键映射到值。</p><p>映射的零值为 nil 。nil 映射既没有键，也不能添加键。</p><p>make 函数会返回给定类型的映射，并将其初始化备用。</p><blockquote><p>m = make(map[string]int)</p></blockquote><h3 id=修改映射>修改映射</h3><p>在映射 m 中插入或修改元素：</p><blockquote><p>m[key] = elem</p></blockquote><p>获取元素：</p><blockquote><p>elem = m[key]</p></blockquote><p>删除元素：</p><blockquote><p>delete(m, key)</p></blockquote><p>通过双赋值检测某个键是否存在：</p><blockquote><p>elem, ok = m[key]</p></blockquote><p>若 key 在 m 中，ok 为 true ；否则，ok 为 false。</p><p>若 key 不在映射中，那么 elem 是该映射元素类型的零值。</p><p>同样的，当从映射中读取某个不存在的键时，结果是映射的元素类型的零值。</p><p>注 ：若 elem 或 ok 还未声明，你可以使用短变量声明：</p><blockquote><p>elem, ok := m[key]</p></blockquote><h2 id=方法>方法</h2><blockquote><p>为结构体类型实现方法即为类。</p></blockquote><blockquote><p>方法只是个带接收者参数的函数。</p></blockquote><p>方法就是一类带特殊的 <strong>接收者</strong> 参数的函数。</p><p>方法接收者在它自己的参数列表内，位于 func 关键字和方法名之间。</p><p>接收者的类型定义和方法声明必须在同一包内；不能为其它包内定义的类型的接收者声明方法；也不能为内建类型（包括 int 之类的）声明方法。</p><p>可以为指针接收者声明方法。</p><p>这意味着对于某类型 T，接收者的类型可以用 *T 的文法。（此外，T 不能是像 *int 这样的指针。）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>MyFloat</span> <span class=kt>float64</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>f</span> <span class=nx>MyFloat</span><span class=p>)</span> <span class=nf>Abs</span><span class=p>()</span> <span class=kt>float64</span> <span class=p>{</span> <span class=c1>// 方法
+</span><span class=c1></span>    <span class=o>...</span>
+<span class=p>}</span>
+
+<span class=kd>type</span> <span class=nx>Vertex</span> <span class=kd>struct</span> <span class=p>{</span>
+    <span class=nx>X</span><span class=p>,</span> <span class=nx>Y</span> <span class=kt>float64</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>v</span> <span class=nx>Vertex</span><span class=p>)</span> <span class=nf>Abs</span><span class=p>()</span> <span class=kt>float64</span> <span class=p>{</span> <span class=c1>// 为值接收者声明方法
+</span><span class=c1></span>    <span class=k>return</span> <span class=nx>math</span><span class=p>.</span><span class=nf>Sqrt</span><span class=p>(</span><span class=nx>v</span><span class=p>.</span><span class=nx>X</span><span class=o>*</span><span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=o>+</span> <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span><span class=o>*</span><span class=nx>v</span><span class=p>.</span><span class=nx>Y</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>v</span> <span class=o>*</span><span class=nx>Vertex</span><span class=p>)</span> <span class=nf>Scale</span><span class=p>(</span><span class=nx>f</span> <span class=kt>float64</span><span class=p>)</span> <span class=p>{</span> <span class=c1>// 为指针接收者声明方法
+</span><span class=c1></span>    <span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=p>=</span> <span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=o>*</span> <span class=nx>f</span>
+    <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span> <span class=p>=</span> <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span> <span class=o>*</span> <span class=nx>f</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=nx>f</span> <span class=o>:=</span> <span class=nf>MyFloat</span><span class=p>(</span><span class=o>-</span><span class=nx>math</span><span class=p>.</span><span class=nx>Sqrt2</span><span class=p>)</span>
+    <span class=nx>f</span><span class=p>.</span><span class=nf>Abs</span><span class=p>()</span> <span class=c1>// 调用方法
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=方法与指针重定向>方法与指针重定向</h3><p>带指针参数的函数必须接受一个指针；接受一个值作为参数的函数必须接受一个指定类型的值。</p><p>以指针为接收者的方法被调用时，接收者既能为值又能为指针；以值为接收者的方法被调用时，接收者既能为值又能为指针。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>Vertex</span> <span class=kd>struct</span> <span class=p>{</span>
+    <span class=nx>X</span><span class=p>,</span> <span class=nx>Y</span> <span class=kt>float64</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>v</span> <span class=o>*</span><span class=nx>Vertex</span><span class=p>)</span> <span class=nf>Scale</span><span class=p>(</span><span class=nx>f</span> <span class=kt>float64</span><span class=p>)</span> <span class=p>{</span> <span class=c1>// 指针为接收者的方法
+</span><span class=c1></span>    <span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=p>=</span> <span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=o>*</span> <span class=nx>f</span>
+    <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span> <span class=p>=</span> <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span> <span class=o>*</span> <span class=nx>f</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>ScaleFunc</span><span class=p>(</span><span class=nx>v</span> <span class=o>*</span><span class=nx>Vertex</span><span class=p>,</span> <span class=nx>f</span> <span class=kt>float64</span><span class=p>)</span> <span class=p>{</span> <span class=c1>// 带指针参数的函数
+</span><span class=c1></span>    <span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=p>=</span> <span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=o>*</span> <span class=nx>f</span>
+    <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span> <span class=p>=</span> <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span> <span class=o>*</span> <span class=nx>f</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>v</span> <span class=nx>Vertex</span><span class=p>)</span> <span class=nf>Abs</span><span class=p>()</span> <span class=kt>float64</span> <span class=p>{</span> <span class=c1>// 以值为接收者的方法
+</span><span class=c1></span>    <span class=k>return</span> <span class=nx>math</span><span class=p>.</span><span class=nf>Sqrt</span><span class=p>(</span><span class=nx>v</span><span class=p>.</span><span class=nx>X</span><span class=o>*</span><span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=o>+</span> <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span><span class=o>*</span><span class=nx>v</span><span class=p>.</span><span class=nx>Y</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>AbsFunc</span><span class=p>(</span><span class=nx>v</span> <span class=nx>Vertex</span><span class=p>)</span> <span class=kt>float64</span> <span class=p>{</span> <span class=c1>// 以值为参数的函数
+</span><span class=c1></span>    <span class=k>return</span> <span class=nx>math</span><span class=p>.</span><span class=nf>Sqrt</span><span class=p>(</span><span class=nx>v</span><span class=p>.</span><span class=nx>X</span><span class=o>*</span><span class=nx>v</span><span class=p>.</span><span class=nx>X</span> <span class=o>+</span> <span class=nx>v</span><span class=p>.</span><span class=nx>Y</span><span class=o>*</span><span class=nx>v</span><span class=p>.</span><span class=nx>Y</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=nx>v</span> <span class=o>:=</span> <span class=nx>Vertex</span><span class=p>{</span><span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>}</span>
+    <span class=nx>v</span><span class=p>.</span><span class=nf>Scale</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=p>(</span><span class=o>&amp;</span><span class=nx>v</span><span class=p>).</span><span class=nf>Scale</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=nf>ScaleFunc</span><span class=p>(</span><span class=nx>v</span><span class=p>,</span> <span class=mi>10</span><span class=p>)</span> <span class=c1>// 编译错误
+</span><span class=c1></span>    <span class=nf>ScaleFunc</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>v</span><span class=p>,</span> <span class=mi>10</span><span class=p>)</span> <span class=c1>// OK
+</span><span class=c1></span>
+    <span class=nx>v</span><span class=p>.</span><span class=nf>Abs</span><span class=p>()</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=p>(</span><span class=o>&amp;</span><span class=nx>v</span><span class=p>).</span><span class=nf>Abs</span><span class=p>()</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=nf>AbsFunc</span><span class=p>(</span><span class=nx>v</span><span class=p>)</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=nf>AbsFunc</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>v</span><span class=p>)</span> <span class=c1>// 编译错误
+</span><span class=c1></span>
+    <span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>v</span><span class=p>,</span> <span class=nx>p</span><span class=p>)</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=选择值或指针作为接收者>选择值或指针作为接收者</h3><p>使用指针接收者的原因有二：</p><ol><li><p>方法能够修改其接收者指向的值。</p></li><li><p>这样可以避免在每次调用方法时复制该值。若值的类型为大型结构体时，这样做会更加高效。</p></li></ol><h2 id=接口>接口</h2><p><strong>接口类型</strong>是由一组方法签名定义的集合。</p><p>接口类型的变量可以保存任意实现了这些方法的值。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>I</span> <span class=kd>interface</span> <span class=p>{</span>
+    <span class=nf>Abs</span><span class=p>()</span> <span class=kt>float64</span>
+<span class=p>}</span>
+
+<span class=c1>// 类型 F 实现了接口 I
+</span><span class=c1></span><span class=kd>type</span> <span class=nx>F</span> <span class=kt>float64</span>
+<span class=kd>func</span> <span class=p>(</span><span class=nx>f</span> <span class=nx>MyFloat</span><span class=p>)</span> <span class=nf>Abs</span><span class=p>()</span> <span class=kt>float64</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=nx>f</span> <span class=p>&lt;</span> <span class=mi>0</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=nb>float64</span><span class=p>(</span><span class=o>-</span><span class=nx>f</span><span class=p>)</span>
+    <span class=p>}</span>
+    <span class=k>return</span> <span class=nb>float64</span><span class=p>(</span><span class=nx>f</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=c1>// 类型 *T 实现了接口 I
+</span><span class=c1></span><span class=kd>type</span> <span class=nx>V</span> <span class=kd>struct</span> <span class=p>{</span>
+    <span class=nx>x</span><span class=p>,</span> <span class=nx>y</span> <span class=kt>float64</span>
+<span class=p>}</span>
+<span class=kd>func</span> <span class=p>(</span><span class=nx>v</span> <span class=o>*</span><span class=nx>V</span><span class=p>)</span> <span class=nf>Abs</span><span class=p>()</span> <span class=kt>float64</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=nx>math</span><span class=p>.</span><span class=nf>Sqrt</span><span class=p>(</span><span class=nx>v</span><span class=p>.</span><span class=nx>x</span> <span class=o>*</span> <span class=nx>v</span><span class=p>.</span><span class=nx>x</span> <span class=o>+</span> <span class=nx>v</span><span class=p>.</span><span class=nx>y</span> <span class=o>*</span> <span class=nx>v</span><span class=p>.</span><span class=nx>y</span><span class=p>)</span>
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=kd>var</span> <span class=nx>i</span> <span class=nx>I</span> 
+    <span class=nx>f</span> <span class=o>:=</span> <span class=nf>F</span><span class=p>(</span><span class=nx>math</span><span class=p>.</span><span class=nx>Sqrt2</span><span class=p>)</span>
+    <span class=nx>v</span> <span class=o>:=</span> <span class=nx>V</span><span class=p>{</span><span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>}</span>
+
+    <span class=nx>a</span> <span class=p>=</span> <span class=nx>f</span> <span class=c1>// OK
+</span><span class=c1></span>    <span class=nx>a</span> <span class=p>=</span> <span class=o>&amp;</span><span class=nx>v</span> <span class=c1>// OK
+</span><span class=c1></span>
+    <span class=nx>a</span> <span class=p>=</span> <span class=nx>v</span> <span class=c1>// 编译错误，Vertex 没有实现接口 I
+</span><span class=c1></span>
+    <span class=kd>var</span> <span class=nx>a</span> <span class=nx>I</span> <span class=p>=</span> <span class=nx>V</span><span class=p>{</span><span class=mi>3</span><span class=p>,</span> <span class=mi>4</span><span class=p>}</span> <span class=c1>// OK
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=接口值>接口值</h3><p>接口也是值。它们可以像其它值一样传递。接口值可以用作函数的参数或返回值。</p><p>在内部，接口值可以看做包含值和具体类型的元组：</p><blockquote><p>(value, type)</p></blockquote><p>接口值保存了一个具体底层类型的具体值。</p><p>接口值调用方法时会执行其底层类型的同名方法。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>func</span> <span class=nx>main</span> <span class=p>{</span>
+    <span class=kd>var</span> <span class=nx>i</span> <span class=nx>I</span> <span class=p>=</span> <span class=nf>F</span><span class=p>(</span><span class=o>-</span><span class=mi>1</span><span class=p>)</span>
+
+    <span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;%v, %T&#34;</span><span class=p>,</span> <span class=nx>i</span><span class=p>,</span> <span class=nx>i</span><span class=p>)</span> <span class=c1>// -1, main.F
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=底层值为-nil-的接口值和-nil-接口值>底层值为 nil 的接口值和 nil 接口值</h3><p>即便接口内的具体值为 nil，方法仍然会被 nil 接收者调用。</p><p>注意: 保存了 nil 具体值的接口其自身并不为 nil。</p><p>nil 接口值既不保存值也不保存具体类型。</p><p>为 nil 接口调用方法会产生运行时错误，因为接口的元组内并未包含能够指明该调用哪个 具体 方法的类型。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=kd>type</span> <span class=nx>I</span> <span class=kd>interface</span> <span class=p>{</span>
+    <span class=nf>M</span><span class=p>()</span>
+<span class=p>}</span>
+
+<span class=kd>type</span> <span class=nx>T</span> <span class=kd>struct</span> <span class=p>{</span>
+
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>T</span><span class=p>)</span> <span class=nf>M</span><span class=p>()</span> <span class=p>{</span>
+
+<span class=p>}</span>
+
+<span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+    <span class=kd>var</span> <span class=nx>i</span> <span class=nx>I</span>
+    <span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;(%v, %T)\n&#34;</span><span class=p>,</span> <span class=nx>i</span><span class=p>,</span> <span class=nx>i</span><span class=p>)</span> <span class=c1>// &lt;nil&gt;, &lt;nil&gt;
+</span><span class=c1></span>    <span class=nx>i</span><span class=p>.</span><span class=nf>M</span><span class=p>()</span> <span class=c1>// 编译错误
+</span><span class=c1></span>
+    <span class=kd>var</span> <span class=nx>t</span> <span class=o>*</span><span class=nx>T</span>
+    <span class=nx>i</span> <span class=p>=</span> <span class=nx>t</span>
+    <span class=nx>fmt</span><span class=p>.</span><span class=nf>Printf</span><span class=p>(</span><span class=s>&#34;(%v, %T)\n&#34;</span><span class=p>,</span> <span class=nx>i</span><span class=p>,</span> <span class=nx>i</span><span class=p>)</span> <span class=c1>// &lt;nil&gt;, *main.T
+</span><span class=c1></span>    <span class=nx>i</span><span class=p>.</span><span class=nf>M</span><span class=p>()</span> <span class=c1>// OK
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=空接口>空接口</h3><p>指定了零个方法的接口值被称为 <em>空接口</em>：</p><blockquote><p>interface{}</p></blockquote><p>空接口可保存任何类型的值。（因为每个类型都至少实现了零个方法。）</p><p>空接口被用来处理未知类型的值。例如，fmt.Print 可接受类型为 interface{} 的任意数量的参数。</p><h3 id=类型断言>类型断言</h3><p><strong>类型断言</strong>提供了访问接口值底层具体值的方式。</p><blockquote><p>t := i.(T)</p></blockquote><p>该语句断言接口值 i 保存了具体类型 T，并将其底层类型为 T 的值赋予变量 t。</p><p>若 i 并未保存 T 类型的值，该语句就会触发一个 panic。</p><p>为了 判断 一个接口值是否保存了一个特定的类型，类型断言可返回两个值：其底层值以及一个报告断言是否成功的布尔值。</p><blockquote><p>t, ok := i.(T)</p></blockquote><p>若 i 保存了一个 T，那么 t 将会是其底层值，而 ok 为 true。</p><p>否则，ok 将为 false 而 t 将为 T 类型的零值，程序并不会产生 panic。</p><p>注意：这种语法和读取一个 map 映射时的相同之处。</p><h3 id=类型选择>类型选择</h3><p><strong>类型选择</strong>是一种按顺序从几个类型断言中选择分支的结构。</p><p>类型选择与一般的 switch 语句相似，不过类型选择中的 case 为类型（而非值）， 它们针对给定接口值所存储的值的类型进行比较。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go><span class=k>switch</span> <span class=nx>v</span> <span class=o>:=</span> <span class=nx>i</span><span class=p>.(</span><span class=kd>type</span><span class=p>)</span> <span class=p>{</span>
+<span class=k>case</span> <span class=nx>T</span><span class=p>:</span>
+    <span class=c1>// v 的类型为 T
+</span><span class=c1></span><span class=k>case</span> <span class=nx>S</span><span class=p>:</span>
+    <span class=c1>// v 的类型为 S
+</span><span class=c1></span><span class=k>default</span><span class=p>:</span>
+    <span class=c1>// 没有匹配，v 与 i 的类型相同, 即一个包含值和具体类型的接口值
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>类型选择中的声明与类型断言 i.(T) 的语法相同，只是具体类型 T 被替换成了关键字 type。</p><p>此选择语句判断接口值 i 保存的值类型是 T 还是 S。在 T 或 S 的情况下，变量 v 会分别按 T 或 S 类型保存 i 拥有的值。在默认（即没有匹配）的情况下，变量 v 与 i 的接口类型和值相同。</p><h2 id=并发>并发</h2></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2019-01-14</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/go_mark/index.md target=_blank>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=http://example.org/go_mark/ data-title="Go 笔记" data-hashtags=Go><i class="fab fa-twitter fa-fw"></i></a><a href=javascript:void(0); title="分享到 Facebook" data-sharer=facebook data-url=http://example.org/go_mark/ data-hashtag=Go><i class="fab fa-facebook-square fa-fw"></i></a><a href=javascript:void(0); title="分享到 Instapaper" data-sharer=instapaper data-url=http://example.org/go_mark/ data-title="Go 笔记" data-description><i data-svg-src=/lib/simple-icons/icons/instapaper.min.svg></i></a><a href=javascript:void(0); title="分享到 微博" data-sharer=weibo data-url=http://example.org/go_mark/ data-title="Go 笔记"><i class="fab fa-weibo fa-fw"></i></a><a href=javascript:void(0); title="分享到 Evernote" data-sharer=evernote data-url=http://example.org/go_mark/ data-title="Go 笔记"><i class="fab fa-evernote fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/go/>Go</a></section><section><span><a href=javascript:void(0); onclick=window.history.back();>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/go_vscode/ class=prev rel=prev title="VSCode 配置 Go 环境"><i class="fas fa-angle-left fa-fw"></i>VSCode 配置 Go 环境</a>
+<a href=/programming_notes/ class=next rel=next title=编程笔记>编程笔记<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.79.1">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i>LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/duya10 target=_blank>duya10</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i></a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={"code":{"copyTitle":"复制到剪贴板","maxShownLines":20},"comment":{},"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
